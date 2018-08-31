@@ -81,7 +81,12 @@ fi
     bin/magento cache:clean
 
     echo "Execute bin/magento setup:config:set to set rabbitmq custom config values"
-    bin/magento setup:config:set --amqp-host=$RABBITMQ_HOST --amqp-port=$RABBITMQ_PORT --amqp-user=$RABBITMQ_USER --amqp-password=$RABBITMQ_PASSWORD
+    echo "\t host=$RABBITMQ_HOST"
+    echo "\t port=$RABBITMQ_PORT"
+    echo "\t user=$RABBITMQ_USER"
+    echo "\t password=$RABBITMQ_PASSWORD"
+
+    bin/magento setup:config:set --amqp-host="$RABBITMQ_HOST" --amqp-port="$RABBITMQ_POPT" --amqp-user="$RABBITMQ_USER" --amqp-password="$RABBITMQ_PASSWORD"
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
