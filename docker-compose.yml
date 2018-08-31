@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+    magento2:
+        build:
+            context: ./
+            network: host
+        env_file:
+            - ./.env
+        environment:
+            - MAGENTO_BASE_URL
+        ports:
+          - ${APP_HTTP_PORT}:80
+        volumes:
+            - ./src:/var/www/magento2
+            - ./data:/var/lib/mysql
+        links:
+            - rabbitmq
+
+    rabbitmq:
+        image: rabbitmq
+        expose:
+            - 5672
