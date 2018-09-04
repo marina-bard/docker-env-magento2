@@ -77,19 +77,22 @@ if [ ! -f /var/www/magento2/bin/magento ]; then
 
 fi
 
-    echo "Update --base-url config to $MAGENTO_BASE_URL"
-    bin/magento setup:store-config:set --base-url="$MAGENTO_BASE_URL"
+echo "Update --base-url config to $MAGENTO_BASE_URL"
+bin/magento setup:store-config:set --base-url="$MAGENTO_BASE_URL"
 
-    echo "Execute bin/magento setup:config:set to set rabbitmq custom config values"
-    echo "host=$RABBITMQ_HOST"
-    echo "port=$RABBITMQ_PORT"
-    echo "user=$RABBITMQ_USER"
-    echo "password=$RABBITMQ_PASSWORD"
+echo "Execute bin/magento setup:config:set to set rabbitmq custom config values"
+echo "host=$RABBITMQ_HOST"
+echo "port=$RABBITMQ_PORT"
+echo "user=$RABBITMQ_USER"
+echo "password=$RABBITMQ_PASSWORD"
 
-    bin/magento setup:config:set -q --amqp-host="$RABBITMQ_HOST" --amqp-port="$RABBITMQ_PORT" --amqp-user="$RABBITMQ_USER" --amqp-password="$RABBITMQ_PASSWORD"
+bin/magento setup:config:set -q --amqp-host="$RABBITMQ_HOST" --amqp-port="$RABBITMQ_PORT" --amqp-user="$RABBITMQ_USER" --amqp-password="$RABBITMQ_PASSWORD"
 
-    echo "Execute bin/magento cache:clean"
-    bin/magento cache:clean
+echo "Execute bin/magento cache:clean"
+bin/magento cache:clean
+
+echo "Run rabbitmq consumer bin/magento customcatalog:consumer"
+bim/magento customcatalog:cosumer &
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
