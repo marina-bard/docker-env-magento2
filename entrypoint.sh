@@ -92,7 +92,7 @@ echo "Execute bin/magento cache:clean"
 bin/magento cache:clean
 
 echo "Run rabbitmq consumer bin/magento customcatalog:consumer"
-bim/magento customcatalog:cosumer &
+bin/magento customcatalog:consumer &
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
