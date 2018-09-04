@@ -9,5 +9,10 @@ To run the application:
     sudo -E docker-compose up --build magento2
 ```
 
-Access http://magento2.local in your browser.  
+Access Magento Home Page by http://magento2.local in your browser.  
+Access Magento Admin by http://magento2.local/admin with:  
+
+> login: admin  
+> password: admin123  
+
 Enjoy!
