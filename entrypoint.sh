@@ -4,6 +4,9 @@ if [ -d /var/lib/mysql/mysql ]; then
     echo "[i] MySQL directory already present, skipping creation"
 
     nohup /usr/bin/mysqld_safe --datadir='/var/lib/mysql' --user=root --console &
+
+    echo "[i] Sleeping 5 sec"
+    sleep 5
 else
     echo "[i] MySQL data directory not found, creating initial DBs"
 
@@ -36,7 +39,7 @@ if [ ! -d /var/www/magento2/update ]; then
     composer create-project --repository=https://repo.magento.com/ magento/project-community-edition /var/www/magento2
 fi
 
-if [ ! -f /vaw/www/magento2/bin/magento ]; then
+if [ ! -f /var/www/magento2/bin/magento ]; then
     echo "Magento setup:install"
     bin/magento setup:install \
         --base-url=$MAGENTO_BASE_URL \
@@ -54,13 +57,8 @@ if [ ! -f /vaw/www/magento2/bin/magento ]; then
         --currency=USD \
         --use-rewrites=1 \
 
-fi
-
     composer config repositories.module-custom-catalog vcs https://github.com/marina-bard/module-custom-catalog.git
     composer require magento/module-custom-catalog dev-master
-
-    echo "Update --base-url config to $MAGENTO_BASE_URL"
-    bin/magento setup:store-config:set --base-url="$MAGENTO_BASE_URL"
 
     echo "Set ownership and permissions. Execute chown -R :nobody ."
     chown -R :nobody .
@@ -77,16 +75,21 @@ fi
     echo "Execute bin/magento setup:di:compile"
     bin/magento setup:di:compile
 
-    echo "Execute bin/magento cache:clean"
-    bin/magento cache:clean
+fi
+
+    echo "Update --base-url config to $MAGENTO_BASE_URL"
+    bin/magento setup:store-config:set --base-url="$MAGENTO_BASE_URL"
 
     echo "Execute bin/magento setup:config:set to set rabbitmq custom config values"
-    echo "\t host=$RABBITMQ_HOST"
-    echo "\t port=$RABBITMQ_PORT"
-    echo "\t user=$RABBITMQ_USER"
-    echo "\t password=$RABBITMQ_PASSWORD"
+    echo "host=$RABBITMQ_HOST"
+    echo "port=$RABBITMQ_PORT"
+    echo "user=$RABBITMQ_USER"
+    echo "password=$RABBITMQ_PASSWORD"
 
-    bin/magento setup:config:set --amqp-host="$RABBITMQ_HOST" --amqp-port="$RABBITMQ_POPT" --amqp-user="$RABBITMQ_USER" --amqp-password="$RABBITMQ_PASSWORD"
+    bin/magento setup:config:set -q --amqp-host="$RABBITMQ_HOST" --amqp-port="$RABBITMQ_PORT" --amqp-user="$RABBITMQ_USER" --amqp-password="$RABBITMQ_PASSWORD"
+
+    echo "Execute bin/magento cache:clean"
+    bin/magento cache:clean
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
